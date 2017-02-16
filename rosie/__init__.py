@@ -33,7 +33,7 @@ class Rosie:
             self.predict(model, irregularity)
         
         print('Writing irregularities for ', year)
-        self.irregularities.to_csv(os.path.join(self.data_path, 'irregularities' + str(year) + '.xz'),
+        self.irregularities.to_csv(os.path.join(self.data_path, 'irregularities_' + str(year) + '.xz'),
                                    compression='xz',
                                    encoding='utf-8',
                                    index=False)
