@@ -6,6 +6,7 @@ from datetime import date as d
 
 import numpy as np
 import pandas as pd
+from os.path import isfile
 
 
 class Dataset:
@@ -22,12 +23,10 @@ class Dataset:
         self.update_datasets()    
         reimbursements = self.get_reimbursements(year)
         companies = self.get_companies()
-        print('Merging ...')
         ds = pd.merge(reimbursements, companies,
                       how='left',
                       left_on='cnpj_cpf',
                       right_on='cnpj')
-        print('Merged!')
         return ds
 
     def update_datasets(self):
@@ -37,19 +36,19 @@ class Dataset:
 #        ceap.convert_to_csv()
 #        ceap.translate()
         ceap.clean()
-        fetch(self.COMPANIES_DATASET, self.path)
+#        fetch(self.COMPANIES_DATASET, self.path)
 
     def get_reimbursements(self, year):
-        if not year:
+        if year == None:
             file_name = self.FILE_BASE_NAME
         else:
             file_name = self.FILE_BASE_NAME[:-3] + '_' + str(year) + '.xz'
         dataset = pd.read_csv(os.path.join(self.path, file_name),
-                        dtype={'applicant_id': np.str,
-                               'cnpj_cpf': np.str,
-                               'congressperson_id': np.str,
-                               'subquota_number': np.str},
-                        low_memory=False)
+                    dtype={'applicant_id': np.str,
+                           'cnpj_cpf': np.str,
+                           'congressperson_id': np.str,
+                           'subquota_number': np.str},
+                    low_memory=False)
         dataset['issue_date'] = pd.to_datetime(dataset['issue_date'], errors='coerce')
         return dataset
 
