@@ -8,7 +8,8 @@ from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
-from datetime import date as d
+#from datetime import date as d
+import datetime
 
 class Rosie:
     CLASSIFIERS = {
@@ -64,11 +65,15 @@ class Rosie:
 
 
 def main(target_directory='/tmp/serenata-data'):
-    current_year = d.today().year
+    stime = datetime.datetime.now()
+    current_year = datetime.date.today().year
     year = 2009
     while year <= current_year:
         dataset = Dataset(target_directory).get(year)
         Rosie(dataset, target_directory).run_classifiers(year)
         year += 1
     print('Done!')
+    etime = datetime.datetime.now()
+    elapsed_time = etime - stime
+    print('Elapsed time: ', elapsed_time.total_seconds / 3600, ' hours')
  
