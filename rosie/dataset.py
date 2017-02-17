@@ -59,8 +59,8 @@ class Dataset:
             f_path = os.path.join(self.path, f)
             if os.path.exists(f_path):
                 counter += 1
-            if counter < 3:
-                ceap.translate()
+        if counter < 3:
+            ceap.translate()
              
         ceap.clean()
         
