@@ -8,7 +8,6 @@ from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
-#from datetime import date as d
 import datetime
 
 class Rosie:
@@ -75,5 +74,5 @@ def main(target_directory='/tmp/serenata-data'):
     print('Done!')
     etime = datetime.datetime.now()
     elapsed_time = etime - stime
-    print('Elapsed time: ', elapsed_time.total_seconds / 3600, ' hours')
+    print('Elapsed time: ', elapsed_time.total_seconds() / 3600, ' hours')
  
