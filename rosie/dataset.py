@@ -32,11 +32,41 @@ class Dataset:
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
         ceap = c.CEAPDataset(self.path)
-        ceap.fetch()
-        ceap.convert_to_csv()
-        ceap.translate()
+        # if we don't check below, for every loop in the main method of Rosie all those methods will be repeated
+        # necessary to check if files were already fetched
+        # necessary to know if files were already converted
+        # necessary to know if files were already translated
+        # necessary to know if reimbursements were already generated
+        # necessary to know if companies data were already fetched
+        counter = 0
+        for f in ['AnoAtual.xml', 'AnoAnterior.xml', 'AnosAnteriores.xml']:
+            f_path = os.path.join(self.path, f)
+            if os.path.exists(f_path):
+                counter += 1
+        if counter < 3:
+            ceap.fetch()
+        
+        counter = 0
+        for f in ['AnoAtual.csv', 'AnoAnterior.csv', 'AnosAnteriores.csv']:
+            f_path = os.path.join(self.path, f)
+            if os.path.exists(f_path):
+                counter += 1
+        if counter < 3:
+            ceap.convert_to_csv()
+        
+        counter = 0
+        for f in ['current-year.xz', 'last-year.xz', 'previous-years.xz']:
+            f_path = os.path.join(self.path, f)
+            if os.path.exists(f_path):
+                counter += 1
+            if counter < 3:
+                ceap.translate()
+             
         ceap.clean()
-        fetch(self.COMPANIES_DATASET, self.path)
+        
+        f_path = os.path.join(self.path, self.COMPANIES_DATASET)
+        if not os.path.exists(f_path):
+            fetch(self.COMPANIES_DATASET, self.path)
 
     def get_reimbursements(self, year):
         if year == None:
