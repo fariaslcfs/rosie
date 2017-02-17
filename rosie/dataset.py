@@ -32,11 +32,11 @@ class Dataset:
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
         ceap = c.CEAPDataset(self.path)
-#        ceap.fetch()
-#        ceap.convert_to_csv()
-#        ceap.translate()
+        ceap.fetch()
+        ceap.convert_to_csv()
+        ceap.translate()
         ceap.clean()
-#        fetch(self.COMPANIES_DATASET, self.path)
+        fetch(self.COMPANIES_DATASET, self.path)
 
     def get_reimbursements(self, year):
         if year == None:
