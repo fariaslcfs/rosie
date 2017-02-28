@@ -1,13 +1,13 @@
 import os
-from serenata_toolbox.datasets import fetch
-from serenata_toolbox import ceap_dataset as c
-from serenata_toolbox import reimbursements as r
 from datetime import date as d
+from os.path import isfile
 
 import numpy as np
 import pandas as pd
-from os.path import isfile
 
+from serenata_toolbox import ceap_dataset as c
+from serenata_toolbox import reimbursements as r
+from serenata_toolbox.datasets import fetch
 
 class Dataset:
     
@@ -32,12 +32,14 @@ class Dataset:
     def update_datasets(self):
         os.makedirs(self.path, exist_ok=True)
         ceap = c.CEAPDataset(self.path)
+
         # if we don't check below, for every loop in the main method of Rosie all those methods will be repeated
         # necessary to check if files were already fetched
         # necessary to know if files were already converted
         # necessary to know if files were already translated
         # necessary to know if reimbursements were already generated
         # necessary to know if companies data were already fetched
+
         counter = 0
         for f in ['AnoAtual.xml', 'AnoAnterior.xml', 'AnosAnteriores.xml']:
             f_path = os.path.join(self.path, f)

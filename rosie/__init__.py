@@ -1,14 +1,14 @@
+import datetime
 import os.path
 
+import numpy as np
 from sklearn.externals import joblib
 
-import numpy as np
 from rosie.dataset import Dataset
 from rosie.invalid_cnpj_cpf_classifier import InvalidCnpjCpfClassifier
 from rosie.meal_price_outlier_classifier import MealPriceOutlierClassifier
 from rosie.monthly_subquota_limit_classifier import MonthlySubquotaLimitClassifier
 from rosie.traveled_speeds_classifier import TraveledSpeedsClassifier
-import datetime
 
 class Rosie:
     CLASSIFIERS = {
@@ -33,7 +33,7 @@ class Rosie:
         print('Writing irregularities for ', year)
         self.irregularities.to_csv(os.path.join(self.data_path, 'irregularities_' + str(year) + '.xz'),
                                    compression='xz',
-                                   encoding='utf-8', 
+                                   encoding='utf-8',
                                    index=False)
 
     def load_trained_model(self, classifier):
@@ -56,7 +56,7 @@ class Rosie:
     def predict(self, model, irregularity):
         model.transform(self.dataset)
         y = model.predict(self.dataset)
-    
+
         self.irregularities[irregularity] = y
         if y.dtype == np.int:
             self.irregularities.loc[y == 1, irregularity] = False
@@ -74,5 +74,5 @@ def main(target_directory='/tmp/serenata-data'):
     print('Done!')
     etime = datetime.datetime.now()
     elapsed_time = etime - stime
-    print('Elapsed time: ', elapsed_time.total_seconds() / 3600, ' hour(s)')
+    print('Elapsed time: ', elapsed_time.total_seconds() / 60, ' min')
  
