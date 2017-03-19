@@ -1,3 +1,4 @@
+import datetime
 import os.path
 
 import numpy as np
@@ -26,12 +27,14 @@ class Rosie:
         self.data_path = data_path
         self.irregularities = self.dataset[self.DATASET_KEYS].copy()
 
-    def run_classifiers(self):
+    def run_classifiers(self, year):
+        print('Starting classifiers for ', year)
         for classifier, irregularity in self.CLASSIFIERS.items():
             model = self.load_trained_model(classifier)
             self.predict(model, irregularity)
-
-        self.irregularities.to_csv(os.path.join(self.data_path, 'irregularities.xz'),
+        
+        print('Writing irregularities for ', year)
+        self.irregularities.to_csv(os.path.join(self.data_path, 'irregularities_' + str(year) + '.xz'),
                                    compression='xz',
                                    encoding='utf-8',
                                    index=False)
@@ -56,6 +59,7 @@ class Rosie:
     def predict(self, model, irregularity):
         model.transform(self.dataset)
         y = model.predict(self.dataset)
+
         self.irregularities[irregularity] = y
         if y.dtype == np.int:
             self.irregularities.loc[y == 1, irregularity] = False
@@ -63,6 +67,15 @@ class Rosie:
 
 
 def main(target_directory='/tmp/serenata-data'):
-    dataset = Dataset(target_directory).get()
-    Rosie(dataset, target_directory).run_classifiers()
-
+    stime = datetime.datetime.now()
+    current_year = datetime.date.today().year
+    year = 2009
+    while year <= current_year:
+        dataset = Dataset(target_directory).get(year)
+        Rosie(dataset, target_directory).run_classifiers(year)
+        year += 1
+    print('Done!')
+    etime = datetime.datetime.now()
+    elapsed_time = etime - stime
+    print('Elapsed time: ', elapsed_time.total_seconds() / 60, ' min')
+ 

@@ -52,11 +52,11 @@ class MealPriceOutlierClassifier(TransformerMixin):
         if 'cnpj_threshold' in _X.columns:
             _X.loc[_X['cnpj_threshold'].notnull(),
                   'threshold'] = _X['cnpj_threshold']
-        _X['y'] = 1
+        _X['y'] = False
         is_outlier = self.__applicable_rows(_X) & \
             _X['threshold'].notnull() & \
             (_X['total_net_value'] > _X['threshold'])
-        _X.loc[is_outlier, 'y'] = -1
+        _X.loc[is_outlier, 'y'] = True
         return _X['y']
 
     def __applicable_rows(self, X):
